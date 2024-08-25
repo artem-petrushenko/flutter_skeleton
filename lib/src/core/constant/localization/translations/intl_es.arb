@@ -1,0 +1,11 @@
+{
+  "@@locale": "es",
+  "home": "Inicio",
+  "@home": {
+    "description": "Título de la página de inicio"
+  },
+  "settings": "Ajustes",
+  "@settings": {
+    "description": "Título de la página de ajustes"
+  }
+}
