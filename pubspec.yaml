@@ -7,26 +7,41 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.4.0
 
 dependencies:
+  bloc_concurrency: ^0.2.5
+  drift: ^2.20.0
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.6
   flutter_localizations:
     sdk: flutter
+  go_router: ^14.2.3
+  http: ^1.2.2
+  intercepted_client: ^0.0.1
+  path_provider: ^2.1.4
+  shared_preferences: ^2.3.2
+  talker: ^4.4.1
+  talker_flutter: ^4.4.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^4.0.0
+  flutter_gen_runner: ^5.3.2
+  # Codegen
+  go_router_builder: ^2.7.0
+  build_runner: ^2.4.9
+  freezed: ^2.5.2
+  retrofit_generator: ^8.1.0
+  json_serializable: ^6.8.0
+  drift_dev: ^2.18.0
+
 
 flutter:
   uses-material-design: true
 
   # Enable generation of localized Strings from arb files.
   generate: true
-
-  assets:
-    # Add assets from the images directory to the application.
-    - assets/images/
