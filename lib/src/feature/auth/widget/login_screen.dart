@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/src/common/widget/scaffold/logger_scaffold.dart';
-
 import 'package:flutter_skeleton/src/feature/auth/widget/auth_scope.dart';
 
 /// {@template login_screen}
@@ -46,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 48,
                 child: TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Email',
                   ),
                 ),
