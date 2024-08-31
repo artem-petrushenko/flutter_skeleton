@@ -40,26 +40,28 @@ class _ScaffoldWithNavigationBarState extends State<ScaffoldWithNavigationBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: widget.navigationShell,
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: _onDestinationSelected,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.abc),
-            label: 'Search',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+      bottomNavigationBar: ValueListenableBuilder(
+        valueListenable: _index,
+        builder: (BuildContext context, int value, Widget? child) {
+          return NavigationBar(
+            selectedIndex: value,
+            onDestinationSelected: _onDestinationSelected,
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.dashboard),
+                label: 'Dashboard',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              )
+            ],
+          );
+        },
       ),
     );
   }

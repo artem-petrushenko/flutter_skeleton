@@ -1,3 +1,13 @@
+import 'package:flutter_skeleton/src/feature/auth/bloc/auth_bloc.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/auth_data_source.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/auth_repository.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/token_storage_sp.dart';
+import 'package:flutter_skeleton/src/feature/auth/logic/auth_interceptor.dart';
+import 'package:flutter_skeleton/src/feature/auth/logic/authorization_client.dart';
+import 'package:flutter_skeleton/src/feature/auth/logic/fake_http_client.dart';
+import 'package:flutter_skeleton/src/feature/dashboard/data/pokemon_data_source.dart';
+import 'package:flutter_skeleton/src/feature/dashboard/data/pokemon_repository.dart';
+import 'package:intercepted_client/intercepted_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_skeleton/src/core/constant/config.dart';
 import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
@@ -50,11 +60,44 @@ final class CompositionRoot {
   }
 
   Future<Dependencies> _initDependencies() async {
-    final sharedPreferences = SharedPreferencesAsync();
-    final settingsBloc = await _initSettingsBloc(sharedPreferences);
+    final asyncSharedPreferences = SharedPreferencesAsync();
+    final settingsBloc = await _initSettingsBloc(asyncSharedPreferences);
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final fakeClient = FakeHttpClient();
+    final storage = TokenStorageSP(sharedPreferences: sharedPreferences);
+    final token = await storage.load();
 
+    final authInterceptor = AuthInterceptor(
+      tokenStorage: storage,
+      authorizationClient: DummyAuthorizationClient(fakeClient),
+      retryClient: fakeClient,
+      token: token,
+    );
+
+    final interceptedClient = InterceptedClient(
+      inner: fakeClient,
+      interceptors: [authInterceptor],
+    );
+
+    final authBloc = AuthBloc(
+      AuthState.idle(
+        status: token != null ? AuthenticationStatus.authenticated : AuthenticationStatus.unauthenticated,
+      ),
+      authRepository: AuthRepositoryImpl(
+        dataSource: AuthDataSourceNetwork(client: fakeClient),
+        storage: storage,
+      ),
+    );
+
+    final pokemonRepository = PokemonRepositoryImpl(
+      PokemonDataSourceNetwork(interceptedClient),
+    );
     return Dependencies(
       settingsBloc: settingsBloc,
+      sharedPreferences: sharedPreferences,
+      authBloc: authBloc,
+      pokemonRepository: pokemonRepository,
+      interceptedClient: interceptedClient,
     );
   }
 

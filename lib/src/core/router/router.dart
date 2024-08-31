@@ -1,4 +1,6 @@
-import 'package:flutter_skeleton/src/core/routing/routes.dart';
+import 'package:flutter_skeleton/src/core/router/auth_guard.dart';
+import 'package:flutter_skeleton/src/core/router/redirect_builder.dart';
+import 'package:flutter_skeleton/src/core/router/routes.dart';
 import 'package:flutter_skeleton/src/core/utils/logger/logger.dart';
 import 'package:go_router/go_router.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -18,6 +20,9 @@ class AppRouter {
     observers: [
       TalkerRouteObserver(Logger.instance),
     ],
-    // redirect: [],
+    redirect: RedirectBuilder({
+      RedirectIfAuthenticatedGuard(),
+      RedirectIfUnauthenticatedGuard(),
+    }).call,
   );
 }

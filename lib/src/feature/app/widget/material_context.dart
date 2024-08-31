@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/src/core/constant/localization/localization.dart';
-import 'package:flutter_skeleton/src/core/routing/router.dart';
+import 'package:flutter_skeleton/src/core/router/router.dart';
 import 'package:flutter_skeleton/src/feature/settings/widget/settings_scope.dart';
 
 class MaterialContext extends StatelessWidget {

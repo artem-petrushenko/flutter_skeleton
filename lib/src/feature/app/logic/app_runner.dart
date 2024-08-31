@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_skeleton/src/core/constant/config.dart';
 import 'package:flutter_skeleton/src/core/utils/app_bloc_observer.dart';
+import 'package:flutter_skeleton/src/core/utils/logger/logger.dart';
 import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
 import 'package:flutter_skeleton/src/feature/app/widget/app.dart';
 import 'package:flutter_skeleton/src/feature/initialization/logic/composition_root.dart';
@@ -36,7 +37,7 @@ final class AppRunner {
         // Attach this widget to the root of the tree.
         runApp(App(result: result));
       } catch (e, stackTrace) {
-        logger.error('Initialization failed', error: e, stackTrace: stackTrace);
+        Logger.error('Initialization failed', exception: e, stackTrace: stackTrace);
         runApp(
           InitializationFailedApp(
             error: e,
