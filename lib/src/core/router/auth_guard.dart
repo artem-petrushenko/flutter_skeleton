@@ -10,7 +10,7 @@ import 'package:flutter_skeleton/src/feature/auth/widget/auth_scope.dart';
 final class RedirectIfAuthenticatedGuard extends Guard {
   // matches login and signup routes
   @override
-  Pattern get matchPattern => RegExp(r'^/(login|signup|ta)$');
+  Pattern get matchPattern => RegExp(r'^/(login|signup)$');
 
   @override
   String? redirect(BuildContext context, GoRouterState state) {
@@ -29,7 +29,7 @@ final class RedirectIfAuthenticatedGuard extends Guard {
 final class RedirectIfUnauthenticatedGuard extends Guard {
   // matches dashboard and settings routes
   @override
-  Pattern get matchPattern => RegExp(r'^/(login|signup)$');
+  Pattern get matchPattern => RegExp(r'^/(login|signup|logger)$');
 
   @override
   bool get invertRedirect => true;
@@ -39,7 +39,7 @@ final class RedirectIfUnauthenticatedGuard extends Guard {
     final auth = AuthScope.of(context);
 
     if (auth.status == AuthenticationStatus.unauthenticated) {
-      return '/login';
+      return Routes.login;
     }
 
     return null;

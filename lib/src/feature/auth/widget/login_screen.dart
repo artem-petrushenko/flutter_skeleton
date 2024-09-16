@@ -95,6 +95,12 @@ class _PasswordTextFieldState extends State<_PasswordTextField> {
   final ValueNotifier<bool> _obscureText = ValueNotifier(true);
 
   @override
+  void dispose() {
+    _obscureText.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 

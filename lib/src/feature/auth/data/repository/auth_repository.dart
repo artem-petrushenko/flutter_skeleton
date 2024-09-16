@@ -1,5 +1,5 @@
 import 'package:flutter_skeleton/src/core/components/rest_client/rest_client.dart';
-import 'package:flutter_skeleton/src/feature/auth/data/auth_data_source.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/data_provider/auth_data_source.dart';
 import 'package:flutter_skeleton/src/feature/auth/logic/auth_interceptor.dart';
 
 /// AuthRepository

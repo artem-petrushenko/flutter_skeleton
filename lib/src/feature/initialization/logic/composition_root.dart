@@ -1,7 +1,7 @@
 import 'package:flutter_skeleton/src/feature/auth/bloc/auth_bloc.dart';
-import 'package:flutter_skeleton/src/feature/auth/data/auth_data_source.dart';
-import 'package:flutter_skeleton/src/feature/auth/data/auth_repository.dart';
-import 'package:flutter_skeleton/src/feature/auth/data/token_storage_sp.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/data_provider/auth_data_source.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/repository/auth_repository.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/data_provider/token_storage_sp.dart';
 import 'package:flutter_skeleton/src/feature/auth/logic/auth_interceptor.dart';
 import 'package:flutter_skeleton/src/feature/auth/logic/authorization_client.dart';
 import 'package:flutter_skeleton/src/feature/auth/logic/fake_http_client.dart';

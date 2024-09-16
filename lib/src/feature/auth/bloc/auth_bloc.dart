@@ -1,6 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/src/feature/auth/data/auth_repository.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/repository/auth_repository.dart';
 import 'package:flutter_skeleton/src/feature/auth/logic/auth_interceptor.dart';
+
+part 'auth_event.dart';
+
+part 'auth_state.dart';
 
 /// Set the state of the bloc
 mixin SetStateMixin<S> on Emittable<S> {
@@ -21,16 +25,13 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
   }) : _authRepository = authRepository {
     on<AuthEvent>(
       (event, emit) => switch (event) {
-        final _SignInWithEmailAndPassword e =>
-          _signInWithEmailAndPassword(e, emit),
+        final _SignInWithEmailAndPassword e => _signInWithEmailAndPassword(e, emit),
         final _SignOut e => _signOut(e, emit),
       },
     );
 
     // emit new state when the authentication status changes
-    authRepository.authStatus
-        .map(($status) => AuthState.idle(status: $status))
-        .listen(($state) {
+    authRepository.authStatus.map(($status) => AuthState.idle(status: $status)).listen(($state) {
       if ($state != state) {
         setState($state);
       }
@@ -48,7 +49,7 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       emit(const AuthState.idle(status: AuthenticationStatus.unauthenticated));
     } on Object catch (e, stackTrace) {
       emit(
-        AuthState.error(
+        AuthState.failure(
           status: AuthenticationStatus.unauthenticated,
           error: e,
         ),
@@ -71,7 +72,7 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       emit(const AuthState.idle(status: AuthenticationStatus.authenticated));
     } on Object catch (e, stackTrace) {
       emit(
-        AuthState.error(
+        AuthState.failure(
           status: AuthenticationStatus.unauthenticated,
           error: e,
         ),
@@ -79,119 +80,4 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       onError(e, stackTrace);
     }
   }
-}
-
-/// Events for [AuthBloc]
-sealed class AuthEvent {
-  const AuthEvent();
-
-  /// Event to sign in with Email and Password
-  const factory AuthEvent.signInWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) = _SignInWithEmailAndPassword;
-
-  /// Event to sign out
-  const factory AuthEvent.signOut() = _SignOut;
-}
-
-final class _SignInWithEmailAndPassword extends AuthEvent {
-  final String email;
-  final String password;
-
-  const _SignInWithEmailAndPassword({
-    required this.email,
-    required this.password,
-  });
-}
-
-final class _SignOut extends AuthEvent {
-  const _SignOut();
-}
-
-/// States for [AuthBloc]
-sealed class AuthState {
-  const AuthState({required this.status});
-
-  /// Status of the authentication
-  final AuthenticationStatus status;
-
-  /// Idle state, state machine is doing nothing
-  const factory AuthState.idle({
-    required AuthenticationStatus status,
-  }) = _AuthStateIdle;
-
-  const factory AuthState.processing({
-    required AuthenticationStatus status,
-  }) = _AuthStateProcessing;
-
-  const factory AuthState.error({
-    required AuthenticationStatus status,
-    required Object error,
-  }) = _AuthStateError;
-
-  /// Get error if state is error
-  Object? get error => switch (this) {
-    final _AuthStateError e => e.error,
-    _ => null,
-  };
-}
-
-final class _AuthStateIdle extends AuthState {
-  const _AuthStateIdle({required super.status});
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is _AuthStateIdle && other.status == status;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([status]);
-
-  @override
-  String toString() => '_AuthStateIdle(status: $status)';
-}
-
-final class _AuthStateProcessing extends AuthState {
-  const _AuthStateProcessing({required super.status});
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is _AuthStateProcessing && other.status == status;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([status]);
-
-  @override
-  String toString() => '_AuthStateProcessing(status: $status)';
-}
-
-final class _AuthStateError extends AuthState {
-  @override
-  final Object error;
-
-  const _AuthStateError({
-    required this.error,
-    required super.status,
-  });
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is _AuthStateError &&
-        other.status == status &&
-        other.error == error;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([status, error]);
-
-  @override
-  String toString() => '_AuthStateError(status: $status, message: $error)';
 }
