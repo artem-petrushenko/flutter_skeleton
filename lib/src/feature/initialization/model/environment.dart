@@ -39,13 +39,11 @@ class AppConfig {
 
   final Flavor environment;
   final String hostUrl;
-  final String jsonFile;
 
   /// Initializes [AppConfig] based on the environment.
   AppConfig._internal({
     required this.environment,
     required this.hostUrl,
-    required this.jsonFile,
   });
 
   /// Factory constructor to initialize [AppConfig] based on the environment.
@@ -62,14 +60,12 @@ class AppConfig {
         return AppConfig._internal(
           environment: Flavor.dev,
           hostUrl: 'https://flutter-starter-dev.com',
-          jsonFile: 'assets/config/json-dev.json',
         );
       case Flavor.prod:
       default:
         return AppConfig._internal(
           environment: Flavor.prod,
           hostUrl: 'https://flutter-starter.com',
-          jsonFile: 'assets/config/json-prod.json',
         );
     }
   }
