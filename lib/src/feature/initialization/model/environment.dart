@@ -1,79 +1,89 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
-/// The environment enum.
-enum Environment {
-  /// Development environment.
-  dev._('DEV'),
+/// Enum to represent different environments.
+enum Flavor {
+  dev('DEV'),
+  prod('PROD');
 
-  /// Production environment.
-  prod._('PROD');
-
-  /// The environment value.
+  /// The string value representing the environment.
   final String value;
 
-  const Environment._(this.value);
+  const Flavor(this.value);
 
-  /// Returns the environment from the given [value].
-  static Environment from(String? value) => switch (value) {
-        'DEV' => Environment.dev,
-        'PROD' => Environment.prod,
-        _ => kReleaseMode ? Environment.prod : Environment.dev,
-      };
+  /// Returns the [Flavor] based on the given [value].
+  static Flavor from(String? value) {
+    switch (value) {
+      case 'DEV':
+        return Flavor.dev;
+      case 'PROD':
+        return Flavor.prod;
+      default:
+        return kReleaseMode ? Flavor.prod : Flavor.dev;
+    }
+  }
 }
 
-/// Application configuration class
+/// Class for application configuration.
 class AppConfig {
-  static final AppConfig _instance = AppConfig._();
+  static AppConfig? _instance;
 
-  /// Returns the current instance of the app configuration.
-  static AppConfig get config => _instance;
+  /// Singleton accessor for the current instance of [AppConfig].
+  static AppConfig get config {
+    if (_instance == null) {
+      throw StateError('AppConfig has not been initialized.');
+    }
+    return _instance!;
+  }
 
-  final Environment environment;
+  final Flavor environment;
   final String hostUrl;
   final String jsonFile;
 
-  /// Factory constructor to initialize [AppConfig] with the correct environment.
-  factory AppConfig() {
-    final environment = const EnvironmentConfig().environment;
-    if (environment == Environment.dev) {
-      return _instance._initDev();
-    } else {
-      return _instance._initProd();
-    }
-  }
-
-  AppConfig._({
-    this.environment = Environment.prod,
-    this.hostUrl = '',
-    this.jsonFile = '',
+  /// Initializes [AppConfig] based on the environment.
+  AppConfig._internal({
+    required this.environment,
+    required this.hostUrl,
+    required this.jsonFile,
   });
 
-  /// Initializes the development environment configuration.
-  AppConfig _initDev() {
-    return AppConfig._(
-      environment: Environment.dev,
-      hostUrl: 'https://flutter-starter-dev.com',
-      jsonFile: 'assets/config/json-dev.json',
-    );
+  /// Factory constructor to initialize [AppConfig] based on the environment.
+  factory AppConfig(String packageName) {
+    final environment = const EnvironmentConfig().getEnvironment(packageName);
+    _instance = AppConfig._initialize(environment);
+    return _instance!;
   }
 
-  /// Initializes the production environment configuration.
-  AppConfig _initProd() {
-    return AppConfig._(
-      environment: Environment.prod,
-      hostUrl: 'https://flutter-starter.com',
-      jsonFile: 'assets/config/json-prod.json',
-    );
+  /// Initializes the configuration based on the environment.
+  static AppConfig _initialize(Flavor environment) {
+    switch (environment) {
+      case Flavor.dev:
+        return AppConfig._internal(
+          environment: Flavor.dev,
+          hostUrl: 'https://flutter-starter-dev.com',
+          jsonFile: 'assets/config/json-dev.json',
+        );
+      case Flavor.prod:
+      default:
+        return AppConfig._internal(
+          environment: Flavor.prod,
+          hostUrl: 'https://flutter-starter.com',
+          jsonFile: 'assets/config/json-prod.json',
+        );
+    }
   }
 }
 
-/// Helper class to retrieve the environment from compile-time constants.
+/// Helper class to determine the environment based on build-time parameters.
 class EnvironmentConfig {
   const EnvironmentConfig();
 
-  /// Retrieves the current environment from build-time parameters.
-  Environment get environment {
-    var environment = const String.fromEnvironment('ENVIRONMENT');
-    return Environment.from(environment);
+  /// Determines the environment based on the package name and platform.
+  Flavor getEnvironment(String packageName) {
+    if ((Platform.isAndroid && packageName == 'com.starter') || (Platform.isIOS && packageName == 'com.starter')) {
+      return Flavor.prod;
+    }
+    return Flavor.dev;
   }
 }

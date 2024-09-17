@@ -1,4 +1,5 @@
 import 'package:flutter_skeleton/src/feature/initialization/model/environment.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
 import 'package:flutter_skeleton/src/feature/initialization/model/dependencies.dart';
@@ -47,7 +48,8 @@ final class CompositionRoot {
   }
 
   Future<Dependencies> _initDependencies() async {
-    AppConfig();
+    final packageInfo = await PackageInfo.fromPlatform();
+    AppConfig(packageInfo.packageName);
     final sharedPreferences = SharedPreferencesAsync();
     final settingsBloc = await _initSettingsBloc(sharedPreferences);
 
