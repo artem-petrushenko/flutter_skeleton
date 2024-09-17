@@ -56,16 +56,16 @@ class AppConfig {
   /// Initializes the configuration based on the environment.
   static AppConfig _initialize(Flavor environment) {
     switch (environment) {
-      case Flavor.dev:
-        return AppConfig._internal(
-          environment: Flavor.dev,
-          hostUrl: 'https://flutter-starter-dev.com',
-        );
       case Flavor.prod:
-      default:
         return AppConfig._internal(
           environment: Flavor.prod,
           hostUrl: 'https://flutter-starter.com',
+        );
+      case Flavor.dev:
+      default:
+        return AppConfig._internal(
+          environment: Flavor.dev,
+          hostUrl: 'https://flutter-starter-dev.com',
         );
     }
   }
@@ -76,7 +76,7 @@ class EnvironmentConfig {
   const EnvironmentConfig();
 
   /// Determines the environment based on the package name and platform.
-  Flavor getEnvironment(String packageName) {
+  Flavor getEnvironment(String? packageName) {
     if ((Platform.isAndroid && packageName == 'com.starter') || (Platform.isIOS && packageName == 'com.starter')) {
       return Flavor.prod;
     }
