@@ -32,13 +32,6 @@ ThemeData createThemeData({
       brightness: brightness,
       extensions: {palette, typography},
       useMaterial3: true,
-
-
-      dropdownMenuTheme: DropdownMenuThemeData(
-        // inputDecorationTheme: InputDecorationTheme(
-        //   border: OutlineInputBorder(),
-        // ),
-      ),
     );
 
 ColorPalette generatePaletteForBrightness(Brightness brightness) {

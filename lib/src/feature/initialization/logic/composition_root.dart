@@ -1,5 +1,6 @@
+import 'package:flutter_skeleton/src/feature/initialization/model/environment.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_skeleton/src/core/constant/config.dart';
 import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
 import 'package:flutter_skeleton/src/feature/initialization/model/dependencies.dart';
 import 'package:flutter_skeleton/src/feature/settings/bloc/settings_bloc.dart';
@@ -24,10 +25,7 @@ import 'package:flutter_skeleton/src/feature/settings/data/theme_repository.dart
 /// {@endtemplate}
 final class CompositionRoot {
   /// {@macro composition_root}
-  const CompositionRoot(this.config, this.logger);
-
-  /// Application configuration
-  final Config config;
+  const CompositionRoot(this.logger);
 
   /// Logger used to log information during composition process.
   final RefinedLogger logger;
@@ -50,6 +48,8 @@ final class CompositionRoot {
   }
 
   Future<Dependencies> _initDependencies() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    AppConfig(packageInfo.packageName);
     final sharedPreferences = SharedPreferencesAsync();
     final settingsBloc = await _initSettingsBloc(sharedPreferences);
 

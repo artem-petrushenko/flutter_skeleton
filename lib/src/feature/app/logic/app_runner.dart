@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/src/core/constant/config.dart';
 import 'package:flutter_skeleton/src/core/utils/app_bloc_observer.dart';
 import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
 import 'package:flutter_skeleton/src/feature/app/widget/app.dart';
@@ -27,8 +26,7 @@ final class AppRunner {
     // Setup bloc observer and transformer
     Bloc.observer = const AppBlocObserver();
     Bloc.transformer = sequential();
-    const config = Config();
-    final initializationProcessor = CompositionRoot(config, logger);
+    final initializationProcessor = CompositionRoot(logger);
 
     Future<void> initializeAndRun() async {
       try {
