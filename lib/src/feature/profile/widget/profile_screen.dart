@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/src/common/widget/scaffold/logger_scaffold.dart';
-import 'package:flutter_skeleton/src/core/router/routes.dart';
+import 'package:flutter_skeleton/src/core/routing/routes.dart';
 import 'package:flutter_skeleton/src/feature/auth/logic/showcase_helper.dart';
 import 'package:flutter_skeleton/src/feature/auth/widget/auth_scope.dart';
 import 'package:go_router/go_router.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_skeleton/src/core/router/routes.dart';
+import 'package:flutter_skeleton/src/core/routing/redirect_builder.dart';
+import 'package:flutter_skeleton/src/core/routing/routes.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_skeleton/src/core/router/redirect_builder.dart';
 import 'package:flutter_skeleton/src/feature/auth/logic/auth_interceptor.dart';
 import 'package:flutter_skeleton/src/feature/auth/widget/auth_scope.dart';
 

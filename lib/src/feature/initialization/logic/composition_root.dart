@@ -57,6 +57,8 @@ final class CompositionRoot {
   }
 
   Future<Dependencies> _initDependencies() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    AppConfig(packageInfo.packageName);
     final asyncSharedPreferences = SharedPreferencesAsync();
     final settingsBloc = await _initSettingsBloc(asyncSharedPreferences);
     final sharedPreferences = await SharedPreferences.getInstance();
@@ -70,10 +72,6 @@ final class CompositionRoot {
       retryClient: fakeClient,
       token: token,
     );
-    final packageInfo = await PackageInfo.fromPlatform();
-    AppConfig(packageInfo.packageName);
-    final sharedPreferences = SharedPreferencesAsync();
-    final settingsBloc = await _initSettingsBloc(sharedPreferences);
 
     final interceptedClient = InterceptedClient(
       inner: fakeClient,
