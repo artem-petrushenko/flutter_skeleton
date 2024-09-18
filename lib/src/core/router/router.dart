@@ -1,5 +1,9 @@
 import 'package:flutter_skeleton/src/core/routing/routes.dart';
 import 'package:flutter_skeleton/src/core/utils/logger/router_logger.dart';
+import 'package:flutter_skeleton/src/core/router/auth_guard.dart';
+import 'package:flutter_skeleton/src/core/router/redirect_builder.dart';
+import 'package:flutter_skeleton/src/core/router/routes.dart';
+import 'package:flutter_skeleton/src/core/utils/logger/logger.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
@@ -17,6 +21,9 @@ class AppRouter {
     observers: [
       RouterLogger(),
     ],
-    // redirect: [],
+    redirect: RedirectBuilder({
+      RedirectIfAuthenticatedGuard(),
+      RedirectIfUnauthenticatedGuard(),
+    }).call,
   );
 }

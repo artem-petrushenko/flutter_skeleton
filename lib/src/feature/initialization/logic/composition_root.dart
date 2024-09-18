@@ -1,6 +1,16 @@
 import 'package:flutter_skeleton/src/core/utils/logger/refined_logger.dart';
 import 'package:flutter_skeleton/src/feature/initialization/model/environment.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_skeleton/src/feature/auth/bloc/auth_bloc.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/data_provider/auth_data_source.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/repository/auth_repository.dart';
+import 'package:flutter_skeleton/src/feature/auth/data/data_provider/token_storage_sp.dart';
+import 'package:flutter_skeleton/src/feature/auth/logic/auth_interceptor.dart';
+import 'package:flutter_skeleton/src/feature/auth/logic/authorization_client.dart';
+import 'package:flutter_skeleton/src/feature/auth/logic/fake_http_client.dart';
+import 'package:flutter_skeleton/src/feature/dashboard/data/pokemon_data_source.dart';
+import 'package:flutter_skeleton/src/feature/dashboard/data/pokemon_repository.dart';
+import 'package:intercepted_client/intercepted_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_skeleton/src/feature/initialization/model/dependencies.dart';
 import 'package:flutter_skeleton/src/feature/settings/bloc/settings_bloc.dart';
@@ -47,13 +57,48 @@ final class CompositionRoot {
   }
 
   Future<Dependencies> _initDependencies() async {
+    final asyncSharedPreferences = SharedPreferencesAsync();
+    final settingsBloc = await _initSettingsBloc(asyncSharedPreferences);
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final fakeClient = FakeHttpClient();
+    final storage = TokenStorageSP(sharedPreferences: sharedPreferences);
+    final token = await storage.load();
+
+    final authInterceptor = AuthInterceptor(
+      tokenStorage: storage,
+      authorizationClient: DummyAuthorizationClient(fakeClient),
+      retryClient: fakeClient,
+      token: token,
+    );
     final packageInfo = await PackageInfo.fromPlatform();
     AppConfig(packageInfo.packageName);
     final sharedPreferences = SharedPreferencesAsync();
     final settingsBloc = await _initSettingsBloc(sharedPreferences);
 
+    final interceptedClient = InterceptedClient(
+      inner: fakeClient,
+      interceptors: [authInterceptor],
+    );
+
+    final authBloc = AuthBloc(
+      AuthState.idle(
+        status: token != null ? AuthenticationStatus.authenticated : AuthenticationStatus.unauthenticated,
+      ),
+      authRepository: AuthRepositoryImpl(
+        dataSource: AuthDataSourceNetwork(client: fakeClient),
+        storage: storage,
+      ),
+    );
+
+    final pokemonRepository = PokemonRepositoryImpl(
+      PokemonDataSourceNetwork(interceptedClient),
+    );
     return Dependencies(
       settingsBloc: settingsBloc,
+      sharedPreferences: sharedPreferences,
+      authBloc: authBloc,
+      pokemonRepository: pokemonRepository,
+      interceptedClient: interceptedClient,
     );
   }
 

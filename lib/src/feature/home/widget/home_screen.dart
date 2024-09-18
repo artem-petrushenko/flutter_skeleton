@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_skeleton/src/common/widget/scaffold/logger_scaffold.dart';
-import 'package:flutter_skeleton/src/core/routing/routes.dart';
+import 'package:flutter_skeleton/src/core/constant/localization/localization.dart';
 import 'package:flutter_skeleton/src/core/utils/layout/layout.dart';
-import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,15 +13,7 @@ class HomeScreen extends StatelessWidget {
 
     return LoggerScaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.home),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              context.push(Routes.settings);
-            },
-          ),
-        ],
+        title: Text(Localization.of(context).home),
       ),
       body: CustomScrollView(
         slivers: [

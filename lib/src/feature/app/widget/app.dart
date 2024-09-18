@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/src/feature/app/widget/material_context.dart';
+import 'package:flutter_skeleton/src/feature/auth/widget/auth_scope.dart';
 import 'package:flutter_skeleton/src/feature/initialization/logic/composition_root.dart';
 import 'package:flutter_skeleton/src/feature/initialization/model/dependencies.dart';
 import 'package:flutter_skeleton/src/feature/initialization/widget/dependencies_scope.dart';
@@ -16,7 +17,7 @@ class App extends StatelessWidget {
         dependencies: result.dependencies,
         child: SettingsScope(
           settingsBloc: result.dependencies.settingsBloc,
-          child: const MaterialContext(),
+          child: const AuthScope(child: MaterialContext()),
         ),
       );
 }
