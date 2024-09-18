@@ -121,15 +121,26 @@ class LogWrapper {
 
 /// Logger class, that manages the logging of messages
 class DefaultLogger extends RefinedLogger {
-  /// Constructs an instance of [DefaultLogger].
-  DefaultLogger([LoggingOptions options = const LoggingOptions()]) {
+  static final DefaultLogger _instance = DefaultLogger._();
+
+  factory DefaultLogger() {
+    return _instance;
+  }
+
+  DefaultLogger._([LoggingOptions options = const LoggingOptions()]) {
     _init(options);
   }
+
+  final List<LogMessage> _logHistory = [];
+
+  /// Constructs an instance of [DefaultLogger].
 
   final _controller = StreamController<LogWrapper>();
   late final _logWrapStream = _controller.stream.asBroadcastStream();
   late final _logStream = _logWrapStream.map((wrapper) => wrapper.message);
   bool _destroyed = false;
+
+  List<LogMessage> get logHistory => List.unmodifiable(_logHistory.reversed);
 
   void _init(LoggingOptions options) {
     if (kReleaseMode && !options.logInRelease) {
@@ -190,6 +201,7 @@ class DefaultLogger extends RefinedLogger {
         : _defaultFormatter(wrappedMessage, options);
 
     _log(formattedMessage);
+    _logHistory.add(wrappedMessage.message); // Добавляем в историю логов
   }
 
   String _defaultFormatter(LogWrapper wrappedMessage, LoggingOptions options) {
@@ -389,6 +401,11 @@ abstract class RefinedLogger {
         printStackTrace: printStackTrace,
         printError: printError,
       );
+
+  void transition(String message) => log(
+        message,
+        level: LogLevel.info,
+      );
 }
 
 /// Represents a single log message with various details
@@ -465,7 +482,11 @@ enum LogLevel implements Comparable<LogLevel> {
 
   /// One or more key business functionalities are not working
   /// and the whole system doesn’t fulfill the business functionalities.
-  fatal._(5);
+  fatal._(5),
+
+  /// A log level used for events that are not expected to happen
+  /// and are critical for the application to continue working.
+  transition._(6);
 
   const LogLevel._(this.severity);
 
@@ -485,5 +506,6 @@ extension on LogLevel {
         LogLevel.warn: '⚠️',
         LogLevel.error: '❌',
         LogLevel.fatal: '💥',
+        LogLevel.transition: '🔄',
       }[this]!;
 }

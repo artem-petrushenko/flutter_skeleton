@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_skeleton/src/common/widget/scaffold/scaffold_with_nav_bar.dart';
-import 'package:flutter_skeleton/src/core/utils/logger/logger.dart';
 import 'package:flutter_skeleton/src/feature/home/widget/home_screen.dart';
+import 'package:flutter_skeleton/src/feature/logger/widget/logger_screen.dart';
 import 'package:flutter_skeleton/src/feature/settings/widget/settings_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 part 'routes.g.dart';
 
@@ -44,7 +43,7 @@ class LoggerRoute extends GoRouteData {
   const LoggerRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => TalkerScreen(talker: Logger.instance);
+  Widget build(BuildContext context, GoRouterState state) => const LoggerScreen();
 }
 
 @TypedGoRoute<HomeRoute>(path: Routes.home)

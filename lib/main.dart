@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
+import 'package:flutter_skeleton/src/core/utils/logger/refined_logger.dart';
 import 'package:flutter_skeleton/src/feature/app/logic/app_runner.dart';
 
 void main() => runZonedGuarded(

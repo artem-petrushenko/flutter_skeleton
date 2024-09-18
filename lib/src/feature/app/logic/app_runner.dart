@@ -4,7 +4,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_skeleton/src/core/utils/app_bloc_observer.dart';
-import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
+import 'package:flutter_skeleton/src/core/utils/logger/refined_logger.dart';
 import 'package:flutter_skeleton/src/feature/app/widget/app.dart';
 import 'package:flutter_skeleton/src/feature/initialization/logic/composition_root.dart';
 import 'package:flutter_skeleton/src/feature/initialization/widget/initialization_failed_app.dart';
@@ -26,7 +26,7 @@ final class AppRunner {
     // Setup bloc observer and transformer
     Bloc.observer = const AppBlocObserver();
     Bloc.transformer = sequential();
-    final initializationProcessor = CompositionRoot(logger);
+    const initializationProcessor = CompositionRoot();
 
     Future<void> initializeAndRun() async {
       try {

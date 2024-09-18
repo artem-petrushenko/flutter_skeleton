@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
-
-import 'logger/logger.dart';
+import 'package:flutter_skeleton/src/core/utils/logger/refined_logger.dart';
 
 /// [BlocObserver] which logs all bloc state changes, errors and events.
 class AppBlocObserver extends BlocObserver {
@@ -22,7 +20,7 @@ class AppBlocObserver extends BlocObserver {
           '${transition.nextState.runtimeType}')
       ..write('New State: ${transition.nextState.toString()}');
 
-    Logger.info(logMessage);
+    logger.info(logMessage.toString());
     super.onTransition(bloc, transition);
   }
 
@@ -33,7 +31,7 @@ class AppBlocObserver extends BlocObserver {
       ..writeln('Event: ${event.runtimeType}')
       ..write('Details: ${event.toString()}');
 
-    Logger.info(logMessage);
+    logger.info(logMessage.toString());
     super.onEvent(bloc, event);
   }
 
@@ -43,9 +41,9 @@ class AppBlocObserver extends BlocObserver {
       ..writeln('Bloc: ${bloc.runtimeType}')
       ..writeln(error.toString());
 
-    Logger.error(
-      logMessage,
-      exception: error,
+    logger.error(
+      logMessage.toString(),
+      error: error,
       stackTrace: stackTrace,
     );
     super.onError(bloc, error, stackTrace);

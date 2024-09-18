@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:drift/drift.dart';
 import 'package:drift/wasm.dart';
-import 'package:flutter_skeleton/src/core/utils/refined_logger.dart';
+import 'package:flutter_skeleton/src/core/utils/logger/refined_logger.dart';
 
 /// {@macro db_executor}
 QueryExecutor createExecutor() => DatabaseConnection.delayed(

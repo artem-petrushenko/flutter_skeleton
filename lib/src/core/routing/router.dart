@@ -1,7 +1,6 @@
 import 'package:flutter_skeleton/src/core/routing/routes.dart';
-import 'package:flutter_skeleton/src/core/utils/logger/logger.dart';
+import 'package:flutter_skeleton/src/core/utils/logger/router_logger.dart';
 import 'package:go_router/go_router.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 class AppRouter {
   AppRouter._();
@@ -16,7 +15,7 @@ class AppRouter {
     initialLocation: Routes.home,
     routes: $appRoutes,
     observers: [
-      TalkerRouteObserver(Logger.instance),
+      RouterLogger(),
     ],
     // redirect: [],
   );

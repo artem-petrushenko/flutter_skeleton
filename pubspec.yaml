@@ -24,8 +24,6 @@ dependencies:
   path: ^1.9.0
   path_provider: ^2.1.4
   shared_preferences: ^2.3.2
-  talker: ^4.4.1
-  talker_flutter: ^4.4.1
 
 dev_dependencies:
   flutter_test:
