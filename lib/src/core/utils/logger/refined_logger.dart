@@ -404,7 +404,27 @@ abstract class RefinedLogger {
 
   void transition(String message) => log(
         message,
-        level: LogLevel.info,
+        level: LogLevel.transition,
+      );
+
+  void blocEvent(
+    String message, {
+    Map<String, Object?>? context,
+  }) =>
+      log(
+        message,
+        level: LogLevel.blocEvent,
+        context: context,
+      );
+
+  void blocTransition(
+    String message, {
+    Map<String, Object?>? context,
+  }) =>
+      log(
+        message,
+        level: LogLevel.blocTransition,
+        context: context,
       );
 }
 
@@ -486,7 +506,9 @@ enum LogLevel implements Comparable<LogLevel> {
 
   /// A log level used for events that are not expected to happen
   /// and are critical for the application to continue working.
-  transition._(6);
+  transition._(6),
+  blocEvent._(7),
+  blocTransition._(8);
 
   const LogLevel._(this.severity);
 
@@ -507,5 +529,7 @@ extension on LogLevel {
         LogLevel.error: '❌',
         LogLevel.fatal: '💥',
         LogLevel.transition: '🔄',
+        LogLevel.blocEvent: '📩',
+        LogLevel.blocTransition: '↔️',
       }[this]!;
 }

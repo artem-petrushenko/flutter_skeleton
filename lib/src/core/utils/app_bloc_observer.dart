@@ -13,36 +13,31 @@ class AppBlocObserver extends BlocObserver {
     Bloc<Object?, Object?> bloc,
     Transition<Object?, Object?> transition,
   ) {
-    final logMessage = StringBuffer()
-      ..writeln('Bloc: ${bloc.runtimeType}')
-      ..writeln('Event: ${transition.event.runtimeType}')
-      ..writeln('Transition: ${transition.currentState.runtimeType} => '
-          '${transition.nextState.runtimeType}')
-      ..write('New State: ${transition.nextState.toString()}');
-
-    logger.info(logMessage.toString());
+    logger.blocTransition(
+      'Bloc ${bloc.runtimeType} with event ${transition.event.runtimeType}',
+      context: {
+        'CURRENT State': transition.currentState.runtimeType,
+        'NEXT State': transition.currentState.runtimeType,
+      },
+    );
     super.onTransition(bloc, transition);
   }
 
   @override
   void onEvent(Bloc<Object?, Object?> bloc, Object? event) {
-    final logMessage = StringBuffer()
-      ..writeln('Bloc: ${bloc.runtimeType}')
-      ..writeln('Event: ${event.runtimeType}')
-      ..write('Details: ${event.toString()}');
-
-    logger.info(logMessage.toString());
+    logger.blocEvent('Event: $event', context: {
+      'Bloc': bloc,
+      'Details': event,
+      'State': bloc.state,
+      'Type': event,
+    });
     super.onEvent(bloc, event);
   }
 
   @override
   void onError(BlocBase<Object?> bloc, Object error, StackTrace stackTrace) {
-    final logMessage = StringBuffer()
-      ..writeln('Bloc: ${bloc.runtimeType}')
-      ..writeln(error.toString());
-
     logger.error(
-      logMessage.toString(),
+      'Bloc: ${bloc.runtimeType}',
       error: error,
       stackTrace: stackTrace,
     );
